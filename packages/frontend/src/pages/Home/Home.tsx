@@ -41,13 +41,18 @@ const randomIntFromInterval = (min: number, max: number) =>
 
 const getNFTPrice = () => randomIntFromInterval(0, 100000);
 
+const generateUserId = () => crypto.randomUUID();
+
 const Home = (): JSX.Element => {
   const [score, setScore] = useState(0);
 
   const [apeNFTs, setApeNFTs] = useState<ApeNFTProps[]>([]);
 
+  const [userId, setUserId] = useState(generateUserId());
+  //const userId = '5fa786c3-956c-4b9e-bcb3-76473a1fb718';
+  
   useAsync(async () => {
-    const { data } = await client.get<ApeNFTData[]>('/nfts');
+    const { data } = await client.get<ApeNFTData[]>(`/nfts/${userId}`);
     setApeNFTs(
       data.map(apeNFT => ({
         ...apeNFT,
@@ -57,7 +62,7 @@ const Home = (): JSX.Element => {
   });
 
   const buyApeNFT = async () => {
-    const { data } = await client.post<ApeNFTData>(`/nfts`);
+    const { data } = await client.post<ApeNFTData>(`/nfts/${userId}`);
 
     setApeNFTs(prevApeNFTs =>
       prevApeNFTs.concat({ ...data, src: ApeNFTImgs[data.imageIndex] }),
