@@ -1,6 +1,6 @@
 import { AWS } from '@serverless/typescript';
 
-import { resources } from './resources';
+import { resources, tableName } from './resources';
 import { functions } from './functions';
 
 const projectName = 'keiko-serverless';
@@ -14,9 +14,10 @@ const serverlessConfiguration: AWS = {
     'serverless-iam-roles-per-function',
     'serverless-better-credentials',
   ],
+  useDotenv: true,
   provider: {
     name: 'aws',
-    runtime: 'nodejs14.x',
+    runtime: 'nodejs18.x',
     architecture: 'arm64',
     region: 'eu-west-1',
     profile: '${env:AWS_PROFILE}', // Used to point to the right AWS account
@@ -24,6 +25,7 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+      NFT_TABLE_NAME: tableName,
     },
     httpApi: {
       payload: '2.0',
@@ -41,12 +43,12 @@ const serverlessConfiguration: AWS = {
   custom: {
     projectName,
     esbuild: {
-      packager: 'yarn',
+      packager: 'pnpm',
       bundle: true,
       minify: false,
       sourcemap: true,
       exclude: ['aws-sdk'],
-      target: 'node14',
+      target: 'node18',
       platform: 'node',
       mainFields: ['module', 'main'],
       concurrency: 5,

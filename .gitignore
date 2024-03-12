@@ -53,3 +53,6 @@ event.json
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# perso
+notes
