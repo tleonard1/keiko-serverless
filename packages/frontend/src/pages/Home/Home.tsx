@@ -1,5 +1,6 @@
 import { AppBar, Button, Toolbar, Typography } from '@mui/material';
 import { Box } from '@mui/system';
+import Draggable from 'react-draggable';
 
 import { useState } from 'react';
 import nft1 from 'assets/nft1.png';
@@ -81,6 +82,7 @@ const Home = (): JSX.Element => {
   };
   const audio = useAudio(coin, { volume: 0.8, playbackRate: 1 });
 
+
   return (
     <Box display="flex" flexDirection="column" height="100vh" maxWidth="100%">
       <AppBar position="sticky">
@@ -125,15 +127,17 @@ const Home = (): JSX.Element => {
         >
           <Box>
             {apeNFTs.map(apeNFT => (
-              <ApeNFT
-                height="100px"
-                key={apeNFT.id}
-                {...apeNFT}
-                onClick={() => {
-                  sellApeNFT(apeNFT.id);
-                  audio.play();
-                }}
-              ></ApeNFT>
+              <Draggable>
+                <ApeNFT
+                  height="100px"
+                  key={apeNFT.id}
+                  {...apeNFT}
+                  onDoubleClick={() => {
+                    sellApeNFT(apeNFT.id);
+                    audio.play();
+                  }}
+                ></ApeNFT>
+              </Draggable>
             ))}
           </Box>
           <Box
