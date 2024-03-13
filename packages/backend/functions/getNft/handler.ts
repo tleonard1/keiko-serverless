@@ -4,8 +4,8 @@ export const main = async (event: { pathParameters: { ownerUserId: string }}): P
     //const primaryKey = {PK: 'Nft', SK: event.pathParameters.ownerUserId}
     //const response = await NFTEntity.getParams(primaryKey)
     
-    const response = (await NFTEntity.query('Nft')).Items || [];
-    const filteredItems = response.filter((item: any) => item.ownerUserId === event.pathParameters.ownerUserId); 
-    return filteredItems;
+    const response = (await NFTEntity.query('Nft', {filters: {attr: "ownerUserId", eq: event.pathParameters.ownerUserId}})).Items ?? [];
+    // const filteredItems = response.filter((item: any) => item.ownerUserId === event.pathParameters.ownerUserId); 
+    return response;
 
 };

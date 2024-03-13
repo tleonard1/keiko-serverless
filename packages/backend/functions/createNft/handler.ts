@@ -25,12 +25,12 @@ export const main = async (event: { pathParameters: { ownerUserId: string }}): P
         const user = {
             PK: 'User',
             SK: event.pathParameters.ownerUserId,
-            balance: 100,
+            balance: 1000 - Item.price,
         }
         await UserEntity.put(user);
     }
     else if(User.Item.balance) {
-        User.Item.balance += Item.price;
+        User.Item.balance -= Item.price;
         await UserEntity.put(User.Item);
     }
 
