@@ -36,18 +36,19 @@ interface ApeNFTData {
 
 const ApeNFTImgs = [nft1, nft2, nft3, nft4, nft5];
 
-const randomIntFromInterval = (min: number, max: number) =>
-  Math.floor(Math.random() * (max - min + 1) + min);
 
-const getNFTPrice = () => randomIntFromInterval(0, 100000);
+const generateUserId = () => crypto.randomUUID();
 
 const Home = (): JSX.Element => {
   const [score, setScore] = useState(0);
 
   const [apeNFTs, setApeNFTs] = useState<ApeNFTProps[]>([]);
 
+  const [userId, setUserId] = useState(generateUserId());
+  //const userId = '5fa786c3-956c-4b9e-bcb3-76473a1fb718';
+  
   useAsync(async () => {
-    const { data } = await client.get<ApeNFTData[]>('/nfts');
+    const { data } = await client.get<ApeNFTData[]>(`/nfts/${userId}`);
     setApeNFTs(
       data.map(apeNFT => ({
         ...apeNFT,
@@ -56,20 +57,27 @@ const Home = (): JSX.Element => {
     );
   });
 
+
+  const getBalance = async (userId: string) => {
+    const response = await client.get<number>(`/getbalance/${userId}`);
+    return response.data;
+  }
+
   const buyApeNFT = async () => {
-    const { data } = await client.post<ApeNFTData>(`/nfts`);
+    const { data } = await client.post<ApeNFTData>(`/nfts/${userId}`);
 
     setApeNFTs(prevApeNFTs =>
       prevApeNFTs.concat({ ...data, src: ApeNFTImgs[data.imageIndex] }),
     );
-    setScore(prevScore => prevScore - getNFTPrice());
+
+    getBalance(userId).then(balance => setScore(balance));
   };
 
   const sellApeNFT = async (apeNFTId: string) => {
     await client.delete(`/nfts/${apeNFTId}`);
-
     setApeNFTs(prevApeNFTs => prevApeNFTs.filter(({ id }) => id !== apeNFTId));
-    setScore(prevScore => prevScore + getNFTPrice());
+    
+    getBalance(userId).then(balance => setScore(balance));
   };
   const audio = useAudio(coin, { volume: 0.8, playbackRate: 1 });
 

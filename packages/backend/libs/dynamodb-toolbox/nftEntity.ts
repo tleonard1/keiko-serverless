@@ -8,6 +8,8 @@ export const NFTEntity = new Entity({
     [PARTITION_KEY]: { type: 'string', partitionKey: true, default: 'Nft' },
     SK: { type: 'string', sortKey: true },
     id: { type: 'string' },
+    ownerUserId: { type: 'string' },
+    price: { type: 'number' },
     positionX: { type: 'number' },
     positionY: { type: 'number' },
     imageIndex: { type: 'number' },

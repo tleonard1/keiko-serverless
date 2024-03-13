@@ -6,6 +6,16 @@ import { PARTITION_KEY, SORT_KEY } from './dynamoDB';
 const app = new App();
 const stack = new Stack(app);
 
+const userTable = new Table(stack, 'usertable', {
+  partitionKey: { name: PARTITION_KEY, type: AttributeType.STRING },
+  sortKey: { name: SORT_KEY, type: AttributeType.STRING },
+  billingMode: BillingMode.PAY_PER_REQUEST,
+  removalPolicy: RemovalPolicy.DESTROY,
+});
+
+export const userTableArn = stack.resolve(userTable.tableArn);
+export const userTableName = stack.resolve(userTable.tableName);
+
 const table = new Table(stack, 'NFTtable', {
   partitionKey: { name: PARTITION_KEY, type: AttributeType.STRING },
   sortKey: { name: SORT_KEY, type: AttributeType.STRING },
