@@ -1,4 +1,4 @@
-import { tableArn, userTableArn } from '..';
+import { tableArn, userTableArn, userPoolArn } from '..';
 
 export const nftTableDynamoDBReadPolicies = {
   Effect: 'Allow',
@@ -35,3 +35,22 @@ export const userTableDynamoDBDeletePolicies = {
   Resource: [userTableArn],
   Action: ['dynamodb:DeleteItem'],
 };
+
+export const nftUserPoolSignupPolicies = {
+  Effect: 'Allow',
+  Resource: [userPoolArn],
+  Action: ['cognito-idp:SignUp']
+}
+
+export const nftUserPoolConfirmPolicies = {
+  Effect: 'Allow',
+  Resource: [userPoolArn],
+  Action: ['cognito-idp:ConfirmSignUp']
+}
+
+export const nftUserPoolSigninPolicies = {
+  Effect: 'Allow',
+  Resource: [userPoolArn],
+  Action: ['cognito-idp:InitiateAuth']
+}
+

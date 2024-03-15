@@ -1,5 +1,3 @@
-
-
 export type UserType = {
     PK: string,
     SK: string,
