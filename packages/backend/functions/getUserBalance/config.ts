@@ -2,7 +2,7 @@ import { getHandlerPath } from "libs/configHelper/getHandlerPath";
 import { userTableDynamoDBReadPolicies } from "resources/policies";
 
 export const getUserBalance = {
-    environment: {  },
+    environment: { },
     iamRoleStatements: [userTableDynamoDBReadPolicies],
     handler: getHandlerPath(__dirname),
     events: [

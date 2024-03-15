@@ -1,5 +1,6 @@
 import { App, RemovalPolicy, Stack } from 'aws-cdk-lib';
 import { AttributeType, BillingMode, Table } from 'aws-cdk-lib/aws-dynamodb';
+import { UserPool, UserPoolClient } from 'aws-cdk-lib/aws-cognito';
 
 import { PARTITION_KEY, SORT_KEY } from './dynamoDB';
 
@@ -26,6 +27,26 @@ const table = new Table(stack, 'NFTtable', {
 export const tableArn = stack.resolve(table.tableArn);
 export const tableName = stack.resolve(table.tableName);
 
+const userPool = new UserPool(stack, 'NftUserPool', {
+  selfSignUpEnabled: true,
+  autoVerify: {
+    email: true,
+  },
+})
+
+export const userPoolArn = stack.resolve(userPool.userPoolArn)
+// export const userPoolName = stack.resolve(userPool.userPoolName)
+
+export const userPoolClient = new UserPoolClient(stack, 'NftUserPoolClient', {
+  userPool,
+  authFlows: {
+    userPassword: true,
+  },
+})
+
+export const userPoolClientId = stack.resolve(userPoolClient.userPoolClientId)
+//export const userPoolClientName = stack.resolve(userPoolClient.userPoolClientName)
+
 /**
  * Do not keep 'Rules' nor 'Parameters' to avoid the following errors (without resorting to cdk bridge plugin):
  *   Error: Invalid configuration encountered
@@ -34,3 +55,5 @@ export const tableName = stack.resolve(table.tableName);
  *   Unable to fetch parameters [/cdk-bootstrap/hnb659fds/version] from parameter store for this account.
  */
 export const resources = { Resources: app.synth().getStackByName(stack.stackName).template.Resources };
+
+
